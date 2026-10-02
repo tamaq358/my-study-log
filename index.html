@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>かんたん日記</title>
+    <meta name="theme-color" content="#f4f5ef" />
+    <meta name="description" content="日々の学習内容と時間を記録する、シンプルな学習ログです。" />
+    <title>学びのログ</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -11,64 +13,51 @@
       <section class="editor-panel" aria-labelledby="app-title">
         <div class="brand-row">
           <div>
-            <p class="eyebrow">localStorage diary</p>
-            <h1 id="app-title">かんたん日記</h1>
+            <p class="eyebrow">STUDY LOG <span>01 / DAILY</span></p>
+            <h1 id="app-title">学びの<span>ログ</span></h1>
+            <p class="intro-copy">今日の一歩を、明日の自分につなげよう。</p>
           </div>
-          <div class="save-state" id="save-state" aria-live="polite">未保存</div>
+          <div class="save-state" id="save-state" aria-live="polite"><span class="status-dot"></span>未保存</div>
         </div>
 
-        <form id="diary-form" class="diary-form">
-          <label class="field-label" for="entry-date">日付</label>
+        <form id="study-form" class="diary-form">
+          <div class="field-row">
+            <label class="field-label" for="entry-date">学習した日</label>
           <input id="entry-date" name="date" type="date" required />
-
-          <fieldset class="mood-field">
-            <legend>今日の気分</legend>
-            <div class="mood-grid" id="mood-grid">
-              <label class="mood-option">
-                <input type="radio" name="mood" value="happy" required />
-                <span class="mood-face">😊</span>
-                <span>うれしい</span>
-              </label>
-              <label class="mood-option">
-                <input type="radio" name="mood" value="calm" />
-                <span class="mood-face">😌</span>
-                <span>おだやか</span>
-              </label>
-              <label class="mood-option">
-                <input type="radio" name="mood" value="normal" />
-                <span class="mood-face">🙂</span>
-                <span>ふつう</span>
-              </label>
-              <label class="mood-option">
-                <input type="radio" name="mood" value="tired" />
-                <span class="mood-face">😵‍💫</span>
-                <span>つかれた</span>
-              </label>
-              <label class="mood-option">
-                <input type="radio" name="mood" value="sad" />
-                <span class="mood-face">🥲</span>
-                <span>しょんぼり</span>
-              </label>
-            </div>
-          </fieldset>
-
-          <label class="field-label" for="entry-note">一言メモ</label>
-          <textarea
-            id="entry-note"
-            name="note"
-            rows="5"
-            maxlength="160"
-            placeholder="今日あったこと、今の気持ちを短く書いてみよう"
-            required
-          ></textarea>
-          <div class="note-meta">
-            <span id="editing-label">今日の記録を書いています</span>
-            <span><span id="char-count">0</span>/160</span>
           </div>
 
+          <div class="field-row field-row-split">
+            <div>
+              <label class="field-label" for="entry-subject">学習した分野</label>
+              <select id="entry-subject" name="subject" required>
+                <option value="" disabled selected>分野を選ぶ</option>
+                <option>英語</option><option>数学</option><option>国語</option><option>理科</option>
+                <option>社会</option><option>プログラミング</option><option>読書</option><option>その他</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label" for="entry-minutes">学習時間</label>
+              <div class="number-field"><input id="entry-minutes" name="minutes" type="number" min="1" max="1440" step="1" placeholder="45" required /><span>分</span></div>
+            </div>
+          </div>
+
+          <label class="field-label" for="entry-learned">今日学んだこと</label>
+          <textarea
+            id="entry-learned"
+            name="learned"
+            rows="4"
+            maxlength="500"
+            placeholder="解けるようになった問題や、気づいたことを書こう"
+            required
+          ></textarea>
+
+          <label class="field-label" for="entry-next">次にやること <span class="optional-label">任意</span></label>
+          <input class="text-input" id="entry-next" name="next" type="text" maxlength="140" placeholder="例：練習問題をもう3問解く" />
+          <p class="note-meta" id="editing-label">今日の学習を記録</p>
+
           <div class="action-row">
-            <button class="primary-button" type="submit">保存</button>
-            <button class="ghost-button" type="button" id="clear-button">入力をクリア</button>
+            <button class="primary-button" type="submit">記録を保存 <span aria-hidden="true">→</span></button>
+            <button class="ghost-button" type="button" id="clear-button">クリア</button>
           </div>
         </form>
       </section>
@@ -76,50 +65,44 @@
       <section class="history-panel" aria-labelledby="history-title">
         <div class="history-header">
           <div>
-            <p class="eyebrow">my records</p>
-            <h2 id="history-title">過去ログ</h2>
+            <p class="eyebrow">YOUR PROGRESS</p>
+            <h2 id="history-title">学習の積み上げ</h2>
           </div>
-          <div class="stats-strip" aria-label="記録数">
-            <strong id="entry-count">0</strong>
-            <span>days</span>
+          <div class="stats-strip" aria-label="学習記録の件数">
+            <strong id="entry-count">0</strong><span>件の記録</span>
           </div>
         </div>
 
-        <section class="biorhythm" aria-labelledby="biorhythm-title">
-          <div>
-            <p class="biorhythm-label" id="biorhythm-title">気分バイオリズム</p>
-            <strong id="biorhythm-message">記録を保存すると表示されます</strong>
+        <section class="progress-panel" aria-labelledby="progress-title">
+          <div class="progress-heading">
+            <div><p class="biorhythm-label">TOTAL STUDY TIME</p><h3 id="progress-title">続けた時間</h3></div>
+            <strong class="total-time" id="total-time">0分</strong>
           </div>
-          <div class="rhythm-chart" id="rhythm-chart" aria-label="最近7件の気分の流れ"></div>
-          <p id="biorhythm-detail" class="biorhythm-detail">最近7件の気分の変化を表示します。</p>
+          <p class="chart-caption">直近7日間の学習時間 <span>分</span></p>
+          <div class="weekly-chart" id="weekly-chart" aria-label="直近7日間の学習時間"></div>
         </section>
-
-        <div class="summary-row" id="summary-row" aria-label="気分の集計"></div>
 
         <div class="list-tools">
           <label class="search-box" for="search-input">
-            <span>検索</span>
-            <input id="search-input" type="search" placeholder="メモから探す" />
+            <span class="visually-hidden">記録を検索</span>
+            <input id="search-input" type="search" placeholder="学んだことを検索" />
           </label>
-          <select id="mood-filter" aria-label="気分で絞り込み">
-            <option value="all">すべての気分</option>
-            <option value="happy">うれしい</option>
-            <option value="calm">おだやか</option>
-            <option value="normal">ふつう</option>
-            <option value="tired">つかれた</option>
-            <option value="sad">しょんぼり</option>
+          <select id="subject-filter" aria-label="分野で絞り込み">
+            <option value="all">すべての分野</option>
+            <option>英語</option><option>数学</option><option>国語</option><option>理科</option>
+            <option>社会</option><option>プログラミング</option><option>読書</option><option>その他</option>
           </select>
         </div>
 
         <div id="empty-state" class="empty-state">
-          <strong>まだ記録がありません</strong>
-          <span>今日の気分と一言メモを保存すると、ここに表示されます。</span>
+          <strong>学びの記録を始めましょう</strong>
+          <span>学習した分野と内容を保存すると、ここに積み重なります。</span>
         </div>
 
-        <ul id="entry-list" class="entry-list" aria-label="保存した日記一覧"></ul>
+        <ul id="entry-list" class="entry-list" aria-label="保存した学習記録一覧"></ul>
       </section>
     </main>
 
-    <script src="app.js"></script>
+    <script src="study-log.js"></script>
   </body>
 </html>
